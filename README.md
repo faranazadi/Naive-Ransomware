@@ -4,6 +4,6 @@
 
 ### Project Summary
 
-This project was originally developed and submitted for my Information Security module at university. Basically, when executed, this program will encrypt your files in the background using the Affine and Reverse ciphers - this is to demonstrate how multiple rounds of encryption and the use of different algorithms in theses rounds increases the complexity of the product cipher. Realistically, this is very weak by today's standards. 
+This project was originally developed and submitted for my Information Security module at university. Basically, when executed, this program will encrypt your files in the background using the Affine and Reverse ciphers - this is to demonstrate how multiple rounds of encryption, and the use of different algorithms in these rounds, increases the complexity/effectiveness of the product cipher. Realistically, this is very weak by modern standards. 
 
 In the future, I intend on implementing AES-256 encryption and a C&C server.
